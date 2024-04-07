@@ -20,6 +20,7 @@ typedef enum
 	EASING_LINEAR,	//Linear easing: progress linearly with time
 	EASING_IN, 		//Quadratic easing in: start slowly and accelerate
 	EASING_OUT, 	//Quadratic easing out: start quickly and decelerate
+	EASING_IN_OUT, 	//Quadratic easing in and out: start slowly, accelerate, then decelerate
 	
 } EasingsMethod;
 
@@ -41,5 +42,7 @@ typedef struct
 //Tween functions
 void Tween_Init(Tween* tween, fixed_t initial_value, fixed_t final_value, fixed_t time, EasingsMethod method, u8 flags);
 void Tween_Update(Tween* tween);
+
+fixed_t Tween_GetValue(Tween* tween); //Retrieve the current value of the tween
 
 #endif

@@ -29,6 +29,12 @@ static fixed_t Easing_CalculateValue(Tween* tween)
 			//Quadratic easing out: start quickly and decelerate
 			return FIXED_UNIT - FIXED_MUL(FIXED_UNIT - normalized_time, FIXED_UNIT - normalized_time);
 		break;
+		case EASING_IN_OUT:
+			if (normalized_time < FIXED_UNIT >> 1)
+				return FIXED_MUL(FIXED_MUL(FIXED_UNIT << 1, normalized_time), normalized_time); //Quadratic easing in
+			else
+				return FIXED_UNIT - FIXED_MUL(FIXED_DEC(2,1), FIXED_MUL(normalized_time - FIXED_UNIT, normalized_time - FIXED_UNIT)); //Quadratic easing out
+		break;
 	}
 	
 	return FIXED_UNIT; //Default to max value if no easing method specified
@@ -68,4 +74,10 @@ void Tween_Update(Tween* tween)
 		else
 			tween->elapsed_time = tween->time;
 	}
+}
+
+//Retrieve the current value of the tween
+fixed_t Tween_GetValue(Tween* tween)
+{
+	return tween->current_value;
 }
