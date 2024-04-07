@@ -11,29 +11,29 @@
 //Easing functions
 static fixed_t Easing_CalculateValue(Tween* tween)
 {
-	//Normalize the elapsed time to use delta time in seconds
-	fixed_t normalized_time = FIXED_DIV(tween->elapsed_time, tween->time);
+	//Divide the elapsed time by the desired time
+	fixed_t time = FIXED_DIV(tween->elapsed_time, tween->time);
 	
-	//Calculate the easing value based on the specified easing method
-	switch (tween->method)
+	//Calculate the easing value based on the specified ease
+	switch (tween->ease)
 	{
 		case EASING_LINEAR:
 			//Linear easing: progress linearly with time
-			return normalized_time;
+			return time;
 		break;
 		case EASING_IN:
 			//Quadratic easing in: start slowly and accelerate
-			return FIXED_MUL(normalized_time, normalized_time);
+			return FIXED_MUL(time, time);
 		break;
 		case EASING_OUT:
 			//Quadratic easing out: start quickly and decelerate
-			return FIXED_UNIT - FIXED_MUL(FIXED_UNIT - normalized_time, FIXED_UNIT - normalized_time);
+			return time * 2 - FIXED_MUL(time, time);
 		break;
 		case EASING_IN_OUT:
-			if (normalized_time < FIXED_UNIT >> 1)
-				return FIXED_MUL(FIXED_MUL(FIXED_UNIT << 1, normalized_time), normalized_time); //Quadratic easing in
+			if (time < FIXED_UNIT >> 1)
+				return FIXED_MUL(FIXED_MUL(FIXED_UNIT << 1, time), time); //Quadratic easing in
 			else
-				return FIXED_UNIT - FIXED_MUL(FIXED_DEC(2,1), FIXED_MUL(normalized_time - FIXED_UNIT, normalized_time - FIXED_UNIT)); //Quadratic easing out
+				return FIXED_UNIT - FIXED_MUL(FIXED_DEC(2,1), FIXED_MUL(time - FIXED_UNIT, time - FIXED_UNIT)); //Quadratic easing out
 		break;
 	}
 	
@@ -41,13 +41,13 @@ static fixed_t Easing_CalculateValue(Tween* tween)
 }
 
 //Tween functions
-void Tween_Init(Tween* tween, fixed_t initial_value, fixed_t final_value, fixed_t time, EasingsMethod method, u8 flags)
+void Tween_Init(Tween* tween, fixed_t initial_value, fixed_t final_value, fixed_t time, Eases ease, u8 flags)
 {
 	//Initialize tween state
 	tween->initial_value = initial_value;
 	tween->final_value = final_value;
 	tween->time = time;
-	tween->method = method;
+	tween->ease = ease;
 	tween->flags = flags;
 	tween->elapsed_time = 0;
 	
@@ -55,7 +55,7 @@ void Tween_Init(Tween* tween, fixed_t initial_value, fixed_t final_value, fixed_
 	tween->current_value = (tween->flags & TWEEN_FLAGS_BACKWARD) ? final_value : initial_value;
 }
 
-void Tween_Update(Tween* tween)
+void Tween_Tick(Tween* tween)
 {
 	//Update the current value based on the easing function
 	if (tween->flags & TWEEN_FLAGS_BACKWARD)

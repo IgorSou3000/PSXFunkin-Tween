@@ -22,7 +22,7 @@ typedef enum
 	EASING_OUT, 	//Quadratic easing out: start quickly and decelerate
 	EASING_IN_OUT, 	//Quadratic easing in and out: start slowly, accelerate, then decelerate
 	
-} EasingsMethod;
+} Eases;
 
 //Tween struct
 typedef struct
@@ -30,7 +30,7 @@ typedef struct
 	fixed_t initial_value; 	//Initial value of the tween
 	fixed_t final_value; 	//Final value of the tween
 	fixed_t current_value; 	//Current value of the tween
-	EasingsMethod method;  	//Easing method used for the tween
+	Eases ease;  			//Easing method used for the tween
 	fixed_t time; 			//Total duration of the tween in seconds
 	u8 flags;				//The flags of the tween
 	
@@ -40,8 +40,8 @@ typedef struct
 } Tween;
 
 //Tween functions
-void Tween_Init(Tween* tween, fixed_t initial_value, fixed_t final_value, fixed_t time, EasingsMethod method, u8 flags);
-void Tween_Update(Tween* tween);
+void Tween_Init(Tween* tween, fixed_t initial_value, fixed_t final_value, fixed_t time, Eases ease, u8 flags);
+void Tween_Tick(Tween* tween);
 
 fixed_t Tween_GetValue(Tween* tween); //Retrieve the current value of the tween
 
