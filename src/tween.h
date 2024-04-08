@@ -32,7 +32,7 @@ typedef struct
 	fixed_t final_value; 			//Final value of the tween
 	fixed_t current_value; 			//Current value of the tween
 	Eases ease;  					//Easing method used for the tween
-	fixed_t time; 					//Total duration of the tween in seconds
+	fixed_t duration; 				//Total duration of the tween in seconds
 	u8 flags;						//The flags of the tween
 	
 	//"Private" members (You probably not will need use these members)
@@ -41,8 +41,8 @@ typedef struct
 } Tween;
 
 //Tween functions
-void Tween_InitWithValue(Tween* tween, fixed_t initial_value, fixed_t final_value, fixed_t time, Eases ease, u8 flags);
-void Tween_InitWithVariable(Tween* tween, fixed_t* valuep, fixed_t final_value, fixed_t time, Eases ease, u8 flags);
+void Tween_InitWithValue(Tween* tween, fixed_t initial_value, fixed_t final_value, fixed_t duration, Eases ease, u8 flags);
+void Tween_InitWithVariable(Tween* tween, fixed_t* valuep, fixed_t final_value, fixed_t duration, Eases ease, u8 flags);
 
 void Tween_Tick(Tween* tween);
 

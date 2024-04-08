@@ -12,7 +12,7 @@
 static fixed_t Easing_CalculateValue(Tween* tween)
 {
 	//Divide the elapsed time by the desired time to normalize it
-	fixed_t time = FIXED_DIV(tween->elapsed_time, tween->time);
+	fixed_t time = FIXED_DIV(tween->elapsed_time, tween->duration);
 	
 	//Calculate the easing value based on the specified ease
 	switch (tween->ease)
@@ -41,13 +41,13 @@ static fixed_t Easing_CalculateValue(Tween* tween)
 }
 
 //Tween functions
-void Tween_InitWithValue(Tween* tween, fixed_t initial_value, fixed_t final_value, fixed_t time, Eases ease, u8 flags)
+void Tween_InitWithValue(Tween* tween, fixed_t initial_value, fixed_t final_value, fixed_t duration, Eases ease, u8 flags)
 {
 	//Initialize tween state
 	tween->value_pointer = NULL;
 	tween->initial_value = initial_value;
 	tween->final_value = final_value;
-	tween->time = time;
+	tween->duration = duration;
 	tween->ease = ease;
 	tween->flags = flags;
 	tween->elapsed_time = 0;
@@ -56,9 +56,9 @@ void Tween_InitWithValue(Tween* tween, fixed_t initial_value, fixed_t final_valu
 	tween->current_value = (tween->flags & TWEEN_FLAGS_BACKWARD) ? final_value : initial_value;
 }
 
-void Tween_InitWithVariable(Tween* tween, fixed_t* valuep, fixed_t final_value, fixed_t time, Eases ease, u8 flags)
+void Tween_InitWithVariable(Tween* tween, fixed_t* valuep, fixed_t final_value, fixed_t duration, Eases ease, u8 flags)
 {
-	Tween_InitWithValue(tween, *valuep, final_value, time, ease, flags);
+	Tween_InitWithValue(tween, *valuep, final_value, duration, ease, flags);
 	
 	//Initialize tween pointers
 	tween->value_pointer = valuep;
@@ -77,16 +77,16 @@ void Tween_Tick(Tween* tween)
 		tween->current_value = tween->initial_value + FIXED_MUL((tween->final_value - tween->initial_value), Easing_CalculateValue(tween));
 	
 	//Update the elapsed time since the tween started
-	if (tween->elapsed_time != tween->time)
+	if (tween->elapsed_time != tween->duration)
 		tween->elapsed_time += timer_dt;
 	
 	//Reset the elapsed time if the loop flag is set, otherwise stop updating the tween
-	if (tween->elapsed_time > tween->time)
+	if (tween->elapsed_time > tween->duration)
 	{
 		if (tween->flags & TWEEN_FLAGS_LOOP)
 			tween->elapsed_time = 0;
 		else
-			tween->elapsed_time = tween->time;
+			tween->elapsed_time = tween->duration;
 	}
 }
 
