@@ -17,30 +17,33 @@
 //Easing methods enumeration
 typedef enum
 {
-	EASING_LINEAR,	//Linear easing: progress linearly with time
-	EASING_IN, 		//Quadratic easing in: start slowly and accelerate
-	EASING_OUT, 	//Quadratic easing out: start quickly and decelerate
-	EASING_IN_OUT, 	//Quadratic easing in and out: start slowly, accelerate, then decelerate
+	EASING_LINEAR,			//Linear easing: progress linearly with time
+	EASING_QUAD_IN, 		//Quadratic easing in: start slowly and accelerate
+	EASING_QUAD_OUT, 		//Quadratic easing out: start quickly and decelerate
+	EASING_QUAD_IN_OUT, 	//Quadratic easing in and out: start slowly, accelerate, then decelerate
 	
 } Eases;
 
 //Tween struct
 typedef struct
 {
-	fixed_t initial_value; 	//Initial value of the tween
-	fixed_t final_value; 	//Final value of the tween
-	fixed_t current_value; 	//Current value of the tween
-	Eases ease;  			//Easing method used for the tween
-	fixed_t time; 			//Total duration of the tween in seconds
-	u8 flags;				//The flags of the tween
+	fixed_t initial_value; 			//Initial value of the tween
+	fixed_t* value_pointer; 		//Pointer to the initial value of the tween (used when you want change the initial value directly)
+	fixed_t final_value; 			//Final value of the tween
+	fixed_t current_value; 			//Current value of the tween
+	Eases ease;  					//Easing method used for the tween
+	fixed_t time; 					//Total duration of the tween in seconds
+	u8 flags;						//The flags of the tween
 	
 	//"Private" members (You probably not will need use these members)
 	
-	fixed_t elapsed_time;	 //Elapsed time since the tween started
+	fixed_t elapsed_time;			//Elapsed time since the tween started
 } Tween;
 
 //Tween functions
-void Tween_Init(Tween* tween, fixed_t initial_value, fixed_t final_value, fixed_t time, Eases ease, u8 flags);
+void Tween_InitWithValue(Tween* tween, fixed_t initial_value, fixed_t final_value, fixed_t time, Eases ease, u8 flags);
+void Tween_InitWithVariable(Tween* tween, fixed_t* valuep, fixed_t final_value, fixed_t time, Eases ease, u8 flags);
+
 void Tween_Tick(Tween* tween);
 
 fixed_t Tween_GetValue(Tween* tween); //Retrieve the current value of the tween
